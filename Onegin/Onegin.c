@@ -8,20 +8,52 @@
 //! @param [in] file_in file_in - pointer on file
 //! @param [in] kol_strings kol_strings - ammount of strings
 //! @return array of pointers to the beginning of lines
-char** Create_pointers (char *mem, FILE *file_in, int unsigned kol_strings);
 
+/**
+ * Too bad func.
+ *
+ * kol_strings -> n_strings
+ * mem 	-> str
+ *
+ * FILE* must be separated from buf.
+ * Error-handling doesn't exist.
+ *
+ * Ded32 recommend:
+ * int separ_lines(char *str, char ***line_arr_p);
+ * Or:
+ * char **extract_lines(char *str, int *nlines_p);
+ *
+ * n_lines == -1 -> error
+ *
+ * @note Test this with "\n line1 \n\n\n line2 \n", 
+ * 	it mustn't cause any errors.
+*/
+char** Create_pointers (char *mem, FILE *file_in, int unsigned kol_strings);
 
 
 //! reads a file and writes it to dynamic memory
 //! @param [in] file_in file in - the file which we want to record
 //! @return array where the read file is located
-char *Read_file(FILE *file_in);
 
+/**
+ * There must be:
+ * int get_fsize(FILE *f)
+ * fread(...)
+*/
+char *Read_file(FILE *file_in);
 
 
 //! recorde information to a file
 //! @param [in] arr_pointers arr_pointers - pointer to the array to be written
 //! @param [in] kol_strings kol_strings - ammount of strings
+
+
+/**
+ * Too bad name.
+ * void must be avoided.
+ * int fwrite_lines(char **lines, int n_lines);  
+ * @return -1 if any error caught.
+*/
 void Write_file(char **arr_pointers, int unsigned kol_strings);
 
 
@@ -29,6 +61,13 @@ void Write_file(char **arr_pointers, int unsigned kol_strings);
 //! determines the number of characters in the file
 //! @param [in] file_in file in - file number of elements we are looking for
 //! @return  number of characters in file
+
+/**
+ * If u don't want to use int:
+ * long get_fsize(FILE *f);
+ * @return -1 indicates an error
+ * It impossible to handle errrors easy with unsigned retval. 
+*/
 unsigned int def_Len_file(FILE *file_in);
 
 
@@ -36,16 +75,23 @@ unsigned int def_Len_file(FILE *file_in);
 //! determines the number of lines in the file
 //! @param [in] mem mem - a pointer to a file to determine the number of lines
 //! @return number of strings in the file
-unsigned int def_kol_strings(char *mem);
 
+/// int get_nlines(char *str); 
+unsigned int def_kol_strings(char *mem);
 
 
 //! reads the file and creates an array of pointers to the beginning of the lines
 //! @return array of pointers to the beginning of lines
+
+/// No comments.
 char **read_file_create_arr_pointers ();
 
 
 
+/**
+ * Inexpensive documentation.
+ * strcmp(*s1, *s2) would be better.
+*/ 
 //! sets the sort condition
 //! @param [in] s1 s1 - first element of comparison
 //! @param [in] s2 s2 - second element of comparison
@@ -53,20 +99,23 @@ char **read_file_create_arr_pointers ();
 int comp(const void* s1, const void* s2);
 
 
-
-
 int main ()
 {
-    char **arr_pointers = read_file_create_arr_pointers();
-
-    int unsigned kol_strings = def_kol_strings(arr_pointers[0]);
-
-    qsort(arr_pointers, kol_strings, sizeof(*arr_pointers), comp);
-
-    Write_file(arr_pointers, kol_strings);
-
-    return 0;
-
+	if (!fopen(INP...)) {
+		fprintf(stderr, ...);
+		return 0;
+	}
+	if (!fopen(OUT...
+	
+	get_fsize
+		if -1 ...
+	calloc
+		if -1 ...
+	extract_lines
+		if -1 ...
+	qsort 
+	fwrite_lines
+	free
 }
 
 char **Create_pointers (char *mem, FILE *file_in, int unsigned kol_strings)
