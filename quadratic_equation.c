@@ -43,7 +43,7 @@ int linear_solution (double b, double c, double *x);
 
 //! @return true if a == b, false if a != b
 
-int compare_with_zero(double a, double b);
+int compare_double_numbers(double a, double b);
 
 
 int main()
@@ -106,20 +106,20 @@ int solv_square_equation (double a, double b, double c, double *x1, double *x2)
     assert(x2 != NULL);
 
 
-    if (compare_with_zero (a, 0))
+    if (compare_double_numbers (a, 0))
         return linear_solution(b, c, x1);
     else
         {
-        if (compare_with_zero(c, 0))
+        if (compare_double_numbers(c, 0))
         {
             x1 = 0;
             return linear_solution(a, b, x2) + 1;
         }
         else {
             double discrim = b*b - 4*a*c;
-            if (discrim - 0 <= -PRECISION)
+            if (discrim <= -PRECISION)
                 return NO_ROOTS;
-            else if (compare_with_zero(discrim, 0) == TRUE)
+            else if (compare_double_numbers(discrim, 0) == TRUE)
             {
                 *x1 = -b/(2*a);
                 return 1;
@@ -138,23 +138,22 @@ int solv_square_equation (double a, double b, double c, double *x1, double *x2)
 }
 
 
-
 int linear_solution (double b, double c, double *x)
 {
     assert(!(isnan(b)));
     assert(!(isnan(c)));
 
-    if (compare_with_zero(b,0) && compare_with_zero(c,0))
-        return INFINIT
+    if (compare_double_numbers(b,0) && compare_double_numbers(c,0))
+        return INFINIT;
 
-    if (compare_with_zero(b, 0) && compare_with_zero(c, 0) == FALSE)
+    if (compare_double_numbers(b, 0) && compare_double_numbers(c, 0) == FALSE)
         return NO_ROOTS;
 
     *x = -c/b;
     return 1;
 }
 
-int compare_with_zero(double a, double b)
+int compare_double_numbers(double a, double b)
 {
     assert(!(isnan(a)));
     assert(!(isnan(b)));
