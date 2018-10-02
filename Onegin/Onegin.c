@@ -2,20 +2,21 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#include <ctype.h>
 
 //! Creation pointers on massiv
 //! @param [in] mem  mem - pointer on massiv
 //! @param [in] file_in file_in - pointer on file
 //! @param [in] kol_strings kol_strings - ammount of strings
 //! @return array of pointers to the beginning of lines
-char** Create_pointers (char *mem, FILE *file_in, int unsigned kol_strings);
+char** Create_pointers (char *mem, int unsigned kol_strings);
 
 
 
 //! reads a file and writes it to dynamic memory
 //! @param [in] file_in file in - the file which we want to record
 //! @return array where the read file is located
-char *Read_file(FILE *file_in);
+char *read_file(FILE *file_in);
 
 
 
@@ -50,9 +51,11 @@ char **read_file_create_arr_pointers ();
 //! @param [in] s1 s1 - first element of comparison
 //! @param [in] s2 s2 - second element of comparison
 //! @return 1 if s1 > s2, 0 if s1 < s2
-int comp(const void* s1, const void* s2);
+int comp1(const void* s1, const void* s2);
 
 
+void the_end_of_str (char **s);
+int comp2 (const void* s1, const void* s2);
 
 
 int main ()
@@ -61,18 +64,19 @@ int main ()
 
     int unsigned kol_strings = def_kol_strings(arr_pointers[0]);
 
-    qsort(arr_pointers, kol_strings, sizeof(*arr_pointers), comp);
-
+    qsort(arr_pointers, kol_strings, sizeof(*arr_pointers), comp1);
+    Write_file(arr_pointers, kol_strings);
+    
+    qsort(arr_pointers, kol_strings, sizeof(*arr_pointers), comp2);
     Write_file(arr_pointers, kol_strings);
 
     return 0;
 
 }
 
-char **Create_pointers (char *mem, FILE *file_in, int unsigned kol_strings)
+char **Create_pointers (char *mem, int unsigned kol_strings)
 {
     assert(mem != NULL);
-    assert(file_in);
     assert(kol_strings);
 
     char **arr_pointers = (char **)calloc( kol_strings + 1, sizeof(*arr_pointers));
@@ -84,7 +88,7 @@ char **Create_pointers (char *mem, FILE *file_in, int unsigned kol_strings)
 
     simvol = mem[i];
 
-    while (mem[i] != EOF)
+    while (mem[i] != '\0')
     {
         if (simvol == '\n')
         {
@@ -98,18 +102,20 @@ char **Create_pointers (char *mem, FILE *file_in, int unsigned kol_strings)
         i++;
     }
     arr_pointers[position] = NULL;
-    fclose(file_in);
     return arr_pointers;
 }
 
-char *Read_file(FILE *file_in)
+char *read_file(FILE *file_in)
 {
     assert(file_in);
 
     unsigned int len_file = def_Len_file(file_in);
 
-    char *mem = (char *)calloc( len_file + 1 , sizeof(*mem));
+    char *mem = (char *)calloc(len_file + 1 , sizeof(mem));
+    assert(mem != NULL);
+
     fread(mem, len_file + 1, sizeof(*mem), file_in);
+    fclose(file_in);
 
     return mem;
 }
@@ -134,10 +140,8 @@ unsigned int def_Len_file(FILE *file_in)
 {
     assert(file_in);
 
-    unsigned int kol_simvols = 0;
-
     fseek(file_in, 0, SEEK_END);
-    kol_simvols = ftell(file_in);
+    unsigned int kol_simvols = ftell(file_in);
     fseek(file_in, 0, SEEK_SET);
 
     return kol_simvols;
@@ -150,7 +154,7 @@ unsigned int def_kol_strings(char *mem)
     unsigned int number_string = 0;
     int i = 0;
 
-    while (mem[i] != EOF)
+    while (mem[i] != '\0')
     {
         if (mem[i] == '\n')
             number_string++;
@@ -163,22 +167,61 @@ unsigned int def_kol_strings(char *mem)
 char **read_file_create_arr_pointers ()
 {
     FILE *file_in = fopen("E_Onegin.txt", "r");
-    if (file_in == NULL) {
-        return 0;
-    }
-    char *mem = Read_file(file_in);
-    int unsigned kol_strings = def_kol_strings(mem);
-    char **arr_pointers = Create_pointers(mem, file_in, kol_strings);
-
     assert(file_in);
+
+    char *mem = read_file(file_in);
     assert(mem != NULL);
+
+    int unsigned kol_strings = def_kol_strings(mem);
+    char **arr_pointers = Create_pointers(mem, kol_strings);
+
+
+
     assert(kol_strings);
     assert(arr_pointers != NULL);
 
     return arr_pointers;
 }
 
-int comp(const void* s1, const void* s2)
+int comp1 (const void* s1, const void* s2)
 {
     return strcmp(*(char* const*) s1, *(char* const*) s2);
 }
+
+int comp2 (const void* s1, const void* s2)
+{
+
+    char* str1 = *(char**) s1;
+    char* str2 = *(char**) s2;
+
+    the_end_of_str(&str1);
+    the_end_of_str(&str2);
+
+    for (;;)
+    {
+        if (*str1 > *str2)
+            return 1;
+        if (*str1 < *str2)
+            return -1;
+        str1--;
+        str2--;
+    }
+
+}
+
+void the_end_of_str (char **s)
+{
+    int index = 0;
+    while (**s != '\0')
+    {
+        (*s)++;
+        index++;
+    }
+    while (isspace(**s) || (**s != '\0') || index > 0 )
+    {
+        (*s)--;
+        index--;
+    }
+}
+
+
