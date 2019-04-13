@@ -1,0 +1,58 @@
+pushkb
+popreg ax
+pushkb
+popreg bx
+pushkb
+popreg cx
+call 5
+end
+:5
+pushreg ax
+push 0
+je 10      
+pushreg bx
+pushreg bx
+mul
+push 4
+pushreg ax
+mul
+pushreg cx
+mul
+sub
+squareroot
+popreg dx  
+push 0
+pushreg bx
+sub
+popreg bx
+pushreg bx  
+pushreg dx
+sub
+push 2
+pushreg ax
+mul
+div
+out
+pushreg bx   
+pushreg dx
+add
+push 2
+pushreg ax
+mul
+div
+out
+:19
+ret
+:10
+pushreg bx
+push 0
+je 1     
+push 0
+pushreg cx
+sub
+pushreg bx
+div
+jmp 19
+:1
+push 999
+jmp 19
