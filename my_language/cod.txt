@@ -1,0 +1,25 @@
+aI KOTIC
+bI KOTIC
+cI KOTIC
+(a:0) MEOW !_! 
+  (b:0) MEOW !_!
+     (c:0) MEOW !_!
+        k=9999 KOTIC $_$ KOTIC
+  $_$ KOTIC
+$_$ KOTIC
+(a:0) MEOW !_!
+   (b:0) MEOW !_!
+     (c#0) MEOW !_!
+        k=-1 KOTIC $_$ KOTIC
+    $_$ KOTIC
+$_$ KOTIC
+(a:0) MEOW !_!
+  (b#0) MEOW !_!
+     k=(-c)/b KOTIC $_$ KOTIC
+$_$ KOTIC
+(a#0) MEOW !_!
+  d=b*b-4*a*c KOTIC
+  k=(-b+S(d))/(2*a) KOTIC
+  k=(-b-S(d))/(2*a) KOTIC
+$_$ KOTIC  
+ 
